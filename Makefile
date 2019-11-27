@@ -1,7 +1,7 @@
 #
 # Makefile
 #
-CC ?= gcc
+CC = ../buildroot/output/host/bin/arm-linux-gcc
 LVGL_DIR ?= ${shell pwd}
 CFLAGS ?= -Wall -Wshadow -Wundef -Wmaybe-uninitialized -O3 -g0 -I$(LVGL_DIR)/
 LDFLAGS ?= -lpthread

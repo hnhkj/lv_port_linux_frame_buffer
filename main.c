@@ -1,10 +1,13 @@
 #include "lvgl/lvgl.h"
 #include "lv_drivers/display/fbdev.h"
+#include "lv_drivers/indev/evdev.h"
 #include "lv_examples/lv_apps/demo/demo.h"
 #include <unistd.h>
 #include <pthread.h>
 #include <time.h>
 #include <sys/time.h>
+
+#include "lv_examples/lv_tests/lv_test_theme/lv_test_theme_1.h"
 
 #define DISP_BUF_SIZE (80*LV_HOR_RES_MAX)
 
@@ -30,11 +33,20 @@ int main(void)
     disp_drv.flush_cb = fbdev_flush;
     lv_disp_drv_register(&disp_drv);
 
+    lv_indev_drv_t indev_drv;
+    lv_indev_drv_init(&indev_drv);
+    evdev_init();
+    indev_drv.type = LV_INDEV_TYPE_POINTER;
+    indev_drv.read_cb = evdev_read;
+    lv_indev_drv_register(&indev_drv);
+
     /*Create a Demo*/
     demo_create();
+    lv_test_theme_1(lv_theme_night_init(210, NULL));
 
     /*Handle LitlevGL tasks (tickless mode)*/
     while(1) {
+        lv_tick_inc(5);
         lv_task_handler();
         usleep(5000);
     }
